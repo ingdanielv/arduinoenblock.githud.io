@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="google" value="notranslate">
+  <title>CLPEGS</title>
+  <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="common.css">
+   
+  <script src="/storage.js"></script>
+  <script src="../../blockly_compressed.js"></script>
+  <script src="../../blocks_compressed.js"></script>
+  <script src="../../javascript_compressed.js"></script>
+ 
+  <script src="../../blocks/inout.js"></script>
+  <script src="../../blocks/serial.js"></script>
+  <script src="../../blocks/softserial.js"></script>
+  <script src="../../blocks/servo.js"></script>
+  <script src="../../blocks/seriallcd.js"></script>
+  <script src="../../blocks/divers.js"></script>
+  <script src="../../blocks/logic.js"></script>
+  <script src="../../blocks/loops.js"></script>
+  <script src="../../blocks/math.js"></script>
+  <script src="../../blocks/text.js"></script>  
+  <script src="../../blocks/variables.js"></script>   
+  <script src="../../blocks/procedures.js"></script>
+  <script src="../../blocks/string.js"></script>  
+  <script src="../../blocks/conversion.js"></script> 
+  <script src="../../blocks/advanced.js"></script> 
+  
+  <script src="../../core/variables.js"></script> 
+  <script src="../../core/procedures.js"></script> 
+  <script src="../../core/string.js"></script>   
+  <script src="../../core/flyout.js"></script> 
+  <script src="../../core/field_string.js"></script> 
+  <script src="../../core/block.js"></script> 
+  <script src="../../core/blockly.js"></script> 
+  <script src="../../core/workspace.js"></script> 
+  
+  <script src="../../generators/clpegs.js"></script>
+  <script src="../../generators/clpegs/inout.js"></script>
+  <script src="../../generators/clpegs/serial.js"></script>
+  <script src="../../generators/clpegs/softserial.js"></script>
+  <script src="../../generators/clpegs/servo.js"></script>
+  <script src="../../generators/clpegs/seriallcd.js"></script>
+  <script src="../../generators/clpegs/divers.js"></script>
+  <script src="../../generators/clpegs/math.js"></script>
+  <script src="../../generators/clpegs/logic.js"></script>
+  <script src="../../generators/clpegs/loops.js"></script>
+  <script src="../../generators/clpegs/text.js"></script>  
+  <script src="../../generators/clpegs/variables.js"></script>
+  <script src="../../generators/clpegs/procedures.js"></script>
+  <script src="../../generators/clpegs/string.js"></script>
+  <script src="../../generators/clpegs/conversion.js"></script>
+  <script src="../../generators/clpegs/advanced.js"></script>
+  
+  <script type="text/javascript" src="Blob.js"></script>
+  <script type="text/javascript" src="blockly_helper.js"></script>
+  <script type="text/javascript" src="FileSaver.min.js"></script>
+  <script type="text/javascript" src="spin.js"></script>
+  
+  <script src="code.js"></script>
+  <script src="common.js"></script>
+ 
+</head>
+<body>
+  <table width="100%" height="100%">
+    <tr>
+      <td>
+        <h1>Controlador logico pragramable en entorno grafico secuencial
+          <span id="title"></span>
+        </h1>
+            <div id="dialogShadow" class="dialogAnimate"></div>
+            <div id="dialogBorder"></div>
+            <div id="dialog"></div>
+      </td>
+      <td class="farSide">
+        <select id="languageMenu"></select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=2>
+        <table width="100%">
+          <tr id="tabRow" height="1em">
+            <td id="tab_blocks" class="tabon">...</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_arduino" class="taboff">CLPEGS en c</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_xml" class="taboff">XML</td>
+            <td class="tabmax">
+              <button id="trashButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="trash icon21">
+              </button>
+              <button id="linkButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="link icon21">
+              </button>
+              <button id="runButton" class="notext primary" title="..." onclick="saveCode()">
+                <img src='../../media/1x1.gif' class="run icon21">
+              </button>
+              <button type="button" onclick="resetClick(">Reset</button>
+              <button onclick="discard()" style="width: 75px">Deshacer</button>
+              <button onclick="saveCode()" style="width: 78px">Guardar</button>
+			  <button type="button" onclick="uploadClick()">Grabar</button>
+			  <button onclick="save()" style="width: 78px">Guardar XML</button>
+           	  <button id="fakeload" style="width: 107px">Cargar XML</button>
+              <input type="file" id="load" style="display: none;"/>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="99%" colspan=2 id="content_area">
+      </td>
+    </tr>
+  </table>
+  <div id="content_blocks" class="content"></div>
+  <pre id="content_arduino" class="content"></pre>
+  <textarea id="content_xml" class="content" wrap="off"></textarea>
+
+  <xml id="toolbox" style="display: none">
+   <category id="catInOut" colour="10">
+    <category id="catDigital" colour="10">
+        <block type="inout_highlow"></block>
+        <block type="inout_buildin_led"></block>
+        <block type="inout_digital_write"></block>
+        <block type="inout_digital_read"></block>
+    </category>
+    <category id="catAnalog" colour="10">
+        <block type="inout_analog_read"></block>
+        <block type="inout_analog_write" x="63" y="38">
+             <field name="PIN">3</field>
+                <value name="Value">
+            <block  type="math_number">
+                <field name="NUM">0</field>
+            </block>
+    </value>
+  </block>
+    </category>
+  </category>
+   <category id="catSerial" colour="30">
+   <block type="serial_printfor" x="13" y="38">
+    <field name="TYPE">DEC</field>
+    <value name="CONTENT">
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+    <block type="serial_read"></block>
+    <block type="serial_available"></block>
+    <block type="serial_print" x="13" y="13">
+    <value name="CONTENT">
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    </block>
+    <block type="serial_printL" x="13" y="38">
+    <value name="CONTENT">
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+  </block>
+   <block type="serial_write" x="38" y="38">
+    <value name="CONTENT">
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+  </block>
+   <block type="serial_write_out" x="63" y="63">
+    <value name="valeur">
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+  </block>
+    <block type="serial_flush"></block>
+    </category>
+      <category id="catSoftSerial" colour="50">
+       	  <block type="soft_init"></block>
+	  <block type="soft_read"></block>
+	  <block type="soft_print"></block>
+	  <block type="soft_write"></block>
+	  <block type="soft_available"></block>  
+      </category>
+      <category id="catServo" colour="80">        
+         <block type="servo_move" x="63" y="38">
+    <field name="PIN">0</field>
+    <value name="DEGREE">
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+    <value name="DELAY_TIME">
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+        <block type="servo_read_degrees"></block>
+        <block type="servo_attached"></block>
+        <block type="servo_detach"></block>
+      </category>
+      <category id="catSerialLCD" colour="120">
+      <block type="grove_serial_lcd_print"></block>
+      <block type="grove_serial_lcd_power"></block>
+      <block type="grove_serial_lcd_effect"></block>
+      </category>
+      <category id="catDivers" colour="150">
+      <block type="grove_temporature_sensor"></block>
+      <block type="grove_ultrasonic_ranger"></block>
+      <block type="grove_motor_shield"></block>
+      <block type="base_delayms">
+        <value name="DELAY_TIME">
+            <block type="math_number" id="20">
+                <field name="NUM">1000</field>
+            </block>
+        </value>
+      </block>
+      <block type="millis"></block>
+      <block type="var_random"></block>
+      <block type="various_constrain"></block>
+      </category>
+   <category id="catString" colour="210" custom="STRING"></category>
+   <sep></sep>
+   <category id="catConversion" colour="165"> 
+          <block type="conversion_tochar"></block>
+          <block type="conversion_tobyte"></block>
+          <block type="conversion_toint"></block>
+          <block type="conversion_tofloat"></block>
+   </category>
+   <category id="catAdvanced" colour="185"> 
+        <block type="advanced_tone">
+          <value name="NUM">
+            <block type="math_number">
+                <field name="NUM">440</field>
+            </block>
+          </value>
+      </block>
+              <block type="advanced_tonedure">
+          <value name="NUM">
+            <block type="math_number">
+                <field name="NUM">440</field>
+            </block>
+          </value>
+          <value name="DUR">
+            <block type="math_number">
+                <field name="NUM">1000</field>
+            </block>
+          </value>
+      </block>
+      <block type="advanced_notone"></block>
+      <block type="advanced_pulsein"></block> 
+      <block type="clpegs_setup"></block>
+     
+   </category>
+   <sep></sep>
+    <category id="catLogic" colour="210">
+        
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_null"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_negate"></block>
+    </category>
+
+    <category id="catLoops" colour="190">
+        <block type="while_do"></block>
+	<block type="do_while"></block>
+        <block type="cont_break"></block>
+        <block type="cont_continue"></block>  
+      <block type="controls_for">
+        <value name="FROM">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </block>
+        </value>
+        <value name="TO">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+        <value name="BY">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </block>
+        </value>
+      </block>   
+        <block type="controls_repeat_x"></block>
+    </category>
+
+    <category id="catMath" colour="230">
+      <block type="base_map"></block>
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_trig"></block>
+    </category>
+    <category id="catText" colour="160">
+      <block type="text"></block>
+      <block type="text_char"></block>
+    </category>
+   <sep></sep>
+
+    <sep></sep>
+    <category id="catVariables" colour="330" custom="VARIABLE"></category>
+    <category id="catFunctions" colour="290" custom="PROCEDURE"></category>
+  </xml>
+
+<div id="badBlockDiv" class="dialogHiddenContent">
+    <table>
+      <tbody>
+        <tr>
+          <td id="badBlockMsg" colspan=2></td>
+        </tr>
+        <tr>
+          <td colspan=2></td>
+        </tr>
+        <tr>
+          <td>
+            <button id='badBlockDoneButton' onclick="BlocklyApps.hideDialog();">
+              OK
+            </button>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+  <script type="text/javascript">  var loadInput = document.getElementById('load');
+  loadInput.addEventListener('change', load, false);
+  document.getElementById('fakeload').onclick = function() {
+    loadInput.click();
+  };
+   
+   //addChangeListener(onchange);
+
+function onchange() {
+    
+      document.getElementById('capacity').innerHTML = Code.workspace.Numberallblock();
+    }
+  </script>
+
+  
+</body>
+</html>
